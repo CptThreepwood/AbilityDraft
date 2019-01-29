@@ -18,3 +18,11 @@ var/
 
 # Serverless directories
 .serverless
+
+# Config
+config/
+
+# Data Files
+data/*.txt
+data/*.json
+data/*.pkl
