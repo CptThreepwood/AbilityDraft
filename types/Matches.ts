@@ -1,16 +1,16 @@
-import { Player } from './Players';
-import { Hero } from './Heroes';
+import { Player, playerFromJson } from './Players';
+import { Hero, getHero } from './Heroes';
 
-export enum Team {
-    RADIANT=0, DIRE=1
-}
-
-export interface Pick {
-    // True if pick, false if ban
-    is_pick: boolean,
-    team: Hero,
-    hero_id: number,
-    order: number
+export function matchFromJson(json: any): Match {
+    return {
+        ...json,
+        players: json.players.map(playerFromJson),
+        tower_status_radiant: convertTowerStatus(json.tower_status_radiant),
+        tower_status_dire: convertTowerStatus(json.tower_status_dire),
+        barracks_status_radiant: convertRaxStatus(json.tower_status_dire),
+        barracks_status_dire: convertRaxStatus(json.tower_status_dire),
+        picks_bans: json.pick_bans.map(pickFromJson),
+    }
 }
 
 export interface Match {
@@ -32,18 +32,18 @@ export interface Match {
     barracks_status_radiant: RaxStatus,
     barracks_status_dire: RaxStatus,
 
-    cluster: 135,
+    cluster: number,
     // Time in seconds at which first blood occured
-    first_blood_time: 68,
+    first_blood_time: number,
     // Whether the lobby is public/private/other
     lobby_type: LobbyType,
     // Number of human players
     human_players: number,
     // ID of league this game was played in. 0 if no league.
-    leagueid: 0,
+    leagueid: number,
     // Community opinion of game
-    positive_votes: 0,
-    negative_votes: 0,
+    positive_votes: number,
+    negative_votes: number,
     // Type of dota game being played
     game_mode: GameMode,
     // Unknown what flags are
@@ -51,10 +51,28 @@ export interface Match {
     // Source 1 vs Source 2
     engine: Engine,
     // Radiant and Dire total kills
-    radiant_score: 27,
-    dire_score: 9,
+    radiant_score: number,
+    dire_score: number,
     // Ordered list of picks and bans
     picks_bans: Pick[]
+}
+
+export enum Team {
+    RADIANT=0, DIRE=1
+}
+
+export function pickFromJson(json: any): Pick {
+    return {
+        ...json, hero: getHero(json.hero_id)
+    }
+}
+
+export interface Pick {
+    // True if pick, false if ban
+    is_pick: boolean,
+    team: Team,
+    hero: Hero,
+    order: number
 }
 
 export enum LobbyType {

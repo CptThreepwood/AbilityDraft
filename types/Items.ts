@@ -1,3 +1,21 @@
+import items from "../data/items.json";
+import { assert } from "console";
+
+
+export function getItem(id: number): Item {
+    const item = items.filter(item => item.id == id);
+    assert(item.length, `No Item found matching ${id}`);
+    return {
+        id: item[0].id,
+        name: item[0].name,
+        cost: item[0].cost,
+        secret_shop: Boolean(item[0].secret_shop),
+        side_shop: Boolean(item[0].side_shop),
+        recipe: Boolean(item[0].recipe),
+        localized_name: item[0].localized_name,
+    };
+}
+
 export interface Item {
     id: number,
     name: string,
