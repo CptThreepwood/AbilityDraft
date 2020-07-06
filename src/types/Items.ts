@@ -3,6 +3,13 @@ import { assert } from "console";
 
 
 export function getItem(id: number): Item {
+    if (id == 0) {
+        return {
+            id: 0, name: 'Empty', cost: 0,
+            secret_shop: false, side_shop: false,
+            recipe: false, localized_name: 'Empty'
+        }
+    }
     const item = items.filter(item => item.id == id);
     assert(item.length, `No Item found matching ${id}`);
     return {
