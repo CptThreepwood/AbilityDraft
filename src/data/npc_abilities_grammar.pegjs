@@ -4,43 +4,29 @@
 // For parsing npc_abilities.txt data file to extract hero abilities and metadata
 
 Result
-  = result:(Line)+ EOF {
-    return result.reduce((acc, cur) => {
-      acc[cur.key] = cur.value;
-      return acc;
-    }, {});
+  = N* result:(Line)+ EOF {
+    return result.reduce((acc, cur) => { acc[cur.key] = cur.value; return acc; }, {});
   }
-  / result:(Object) EOF {
-    return { default: result };
-  }
+  / N* result:(Object) EOF { return { default: result }; }
 
 Object
-  = _ "{" _ lines:(Line*) _ "}" _ {
-    return lines.filter(a => a.type == 'Property').reduce(
-      (acc, cur) => {
-        acc[cur.key] = cur.value;
-        return acc;
-      }, {}
+  = "{" N* lines:(Line*) N* S "}" {
+    return lines.filter(a => a.type != 'Comment').reduce(
+    	(acc, cur) => { acc[cur.key] = cur.value; return acc; }, {}
     );
   }
 
-
 Line
-  = _ key:(String) _ value:(String / Object) _ {
-    return {
-      type: 'Property',
-      key, value
-    };
-  }
-  / comment:Comment {
-    return {
-      type: 'Comment',
-      comment: comment
-    };
-  }
-  
+  = S key:String S value:String End { return { type: 'Property', key, value };
+  / S key:String (S N)+ S value:Object End { return { type: 'Object', key, value }; }
+  / comment:Comment {  return { type: 'Comment', comment: comment }; }
+
+End
+  = comment:Comment { return comment; }
+  / (S N)+ { return null; }
+
 Comment
-  = _ "//" comment:([^\n\r]*) [\n\r] {
+  = S "//" comment:([^\n\r]*) (S N)+ {
     return comment.join('')
   }
 
@@ -67,6 +53,10 @@ Escape
     return String.fromCodePoint(parseInt(codePoint.join(''), 16));
   }
 
-_ "whitespace" = [ \t\n\r]*
+_ "any whitespace" = [ \t\n\r]*
+
+S "inline whitespace" = [ \t]*
+
+N "newline" = [\n\r]
 
 EOF = !.
