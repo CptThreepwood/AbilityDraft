@@ -1,4 +1,5 @@
 import { Ability } from "./types/Abilities";
+import { writeFileSync } from "fs";
 
 type AbilityData = {[key: string]: string | AbilityData}
 
@@ -10,6 +11,7 @@ export function parseDotaAbilityData(raw: string): AbilityData {
         // Split lines by tabs to get all tokens
         (acc: string[], cur) => acc.concat(cur.split('\t').filter(token => token != '')), []
     );
+    writeFileSync('./test_lex.json', JSON.stringify(lexed))
     return parse(lexed)[0];
 }
 

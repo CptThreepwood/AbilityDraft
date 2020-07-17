@@ -17,7 +17,7 @@ Object
   }
 
 Line
-  = S key:String S value:String End { return { type: 'Property', key, value };
+  = S key:String S value:String End { return { type: 'Property', key, value }; }
   / S key:String (S N)+ S value:Object End { return { type: 'Object', key, value }; }
   / comment:Comment {  return { type: 'Comment', comment: comment }; }
 
