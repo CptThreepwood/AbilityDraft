@@ -4,13 +4,12 @@
 // For parsing npc_abilities.txt data file to extract hero abilities and metadata
 
 Result
-  = N* result:(Line)+ EOF {
+  = (S N)* result:(Line)+ EOF {
     return result.reduce((acc, cur) => { acc[cur.key] = cur.value; return acc; }, {});
   }
-  / N* result:(Object) EOF { return { default: result }; }
 
 Object
-  = "{" N* lines:(Line*) N* S "}" {
+  = "{" End lines:(Line*) (S N)* S "}" {
     return lines.filter(a => a.type != 'Comment').reduce(
     	(acc, cur) => { acc[cur.key] = cur.value; return acc; }, {}
     );
@@ -18,12 +17,13 @@ Object
 
 Line
   = S key:String S value:String End { return { type: 'Property', key, value }; }
-  / S key:String (S N)+ S value:Object End { return { type: 'Object', key, value }; }
+  / S key:String End S value:Object End { return { type: 'Object', key, value }; }
   / comment:Comment {  return { type: 'Comment', comment: comment }; }
+
 
 End
   = comment:Comment { return comment; }
-  / (S N)+ { return null; }
+  / (S N)* { return null; }
 
 Comment
   = S "//" comment:([^\n\r]*) (S N)+ {
