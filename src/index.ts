@@ -1,5 +1,6 @@
 import { promises } from 'fs';
 import { matchFromJson } from './types/Matches';
+import { getAbilities } from './parseAbilities';
 
 async function testMatch() {
     const data = await promises.readFile(
@@ -7,7 +8,18 @@ async function testMatch() {
     ).then(
         data => JSON.parse(data)
     );
-    console.log(matchFromJson(data));
+    const parsedMatch = matchFromJson(data);
+    console.log(parsedMatch);
+    await promises.writeFile('./test/parsedMatch.json', JSON.stringify(parsedMatch));
 }
 
-testMatch().then(() => console.log('done'));
+
+
+function testParser() {
+    getAbilities().then(
+        abilities => promises.writeFile('test.json', JSON.stringify(abilities))
+    )
+}
+
+testParser();
+// testMatch().then(() => console.log('done'));

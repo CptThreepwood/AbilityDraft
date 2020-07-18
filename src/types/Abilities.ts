@@ -2,6 +2,8 @@ import abilities from '../data/abilities.json';
 import { assert } from 'console';
 
 export function abilityUpgradeFromJson(json: any): AbilityUpgrade {
+    console.log(json);
+    console.log(getAbility(json.ability));
     return {...json, ability: getAbility(json.ability)}
 }
 
