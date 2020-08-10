@@ -1,4 +1,4 @@
-import { Ability } from "./types/Abilities";
+import { Ability } from "../types/Abilities";
 import { promises } from "fs";
 import { generate } from "pegjs";
 
