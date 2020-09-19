@@ -17,6 +17,9 @@ var/
 *.egg
 **/node_modules/**
 
+# VSCode settings
+.vscode/
+
 # Serverless directories
 .serverless
 
