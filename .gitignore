@@ -23,8 +23,8 @@ var/
 # Serverless directories
 .serverless
 
-# Config
-config/
+# Secrets
+**.secret.**
 
 # Data Files
 data/*.txt
