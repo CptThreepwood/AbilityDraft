@@ -3,7 +3,7 @@ import { assert } from "console";
 
 
 export function getItem(id: number): Item {
-    if (id == 0) {
+    if (id == 0 || id === undefined) {
         return {
             id: 0, name: 'Empty', cost: 0,
             secret_shop: false, side_shop: false,

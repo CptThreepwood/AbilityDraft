@@ -4,12 +4,12 @@ import { Hero, getHero } from './Heroes';
 export function matchFromJson(json: any): Match {
     return {
         ...json,
-        players: json.players.map(playerFromJson),
+        players: json.players?.map(playerFromJson) || [],
         tower_status_radiant: convertTowerStatus(json.tower_status_radiant),
         tower_status_dire: convertTowerStatus(json.tower_status_dire),
         barracks_status_radiant: convertRaxStatus(json.barracks_status_dire),
         barracks_status_dire: convertRaxStatus(json.barracks_status_dire),
-        picks_bans: json.picks_bans.map(pickFromJson),
+        picks_bans: json.picks_bans?.map(pickFromJson) || [],
     }
 }
 

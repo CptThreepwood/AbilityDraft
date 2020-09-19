@@ -29,7 +29,7 @@ export function playerFromJson(json: any): Player {
         backpack_1: json.backpack_1 ? getItem(json.backpack_1) : undefined,
         backpack_2: json.backpack_2 ? getItem(json.backpack_2) : undefined,
         item_neutral: json.item_neutral ? getItem(json.item_neutral) : undefined,
-        ability_upgrades: json.ability_upgrades.map(abilityUpgradeFromJson)
+        ability_upgrades: json.ability_upgrades?.map(abilityUpgradeFromJson) || []
     }
 }
 
