@@ -1,13 +1,15 @@
 import { Ability } from "../types/Abilities";
 import { promises } from "fs";
 import { generate } from "pegjs";
+import { create } from "domain";
 
 // https://github.com/SteamDatabase/GameTracking-Dota2/game/dota/scripts/npc/npc_abilities.txt
 // https://raw.githubusercontent.com/SteamDatabase/GameTracking-Dota2/master/game/dota/pak01_dir/resource/localization/abilities_english.txt
 
-const ENGLISH_NAMES = "./src/data/abilityRaw/abilities_english.txt";
-const ABILTIES_DATA = './src/data/abilityRaw/npc_abilities.txt';
-const GRAMMAR = './src/data/abilityRaw/abilitiesGrammar.pegjs';
+const ENGLISH_NAMES     = "./src/createAbilityData/abilities_english.txt";
+const GRAMMAR           = './src/createAbilityData/abilitiesGrammar.pegjs';
+const ABILTIES_DATA     = './src/createAbilityData/npc_abilities.txt';
+const DEFAULT_OUTPUT    = './src/data/abilities.json';
 
 type NameLookup = {[id: string]: string}
 async function readEnglishAbilities(): Promise<NameLookup> {
@@ -49,10 +51,13 @@ async function parseDotaAbilityData(raw: string, grammarFile: string): Promise<A
 export async function createAbilities(
     dataFile: string = ABILTIES_DATA,
     grammarFile: string = GRAMMAR,
-    outputAbilities: string = './src/data/abilities.json'
+    outputAbilities: string = DEFAULT_OUTPUT,
 ) {
     const rawAbilityString = await promises.readFile(dataFile, 'ascii');
     return parseDotaAbilityData(rawAbilityString, grammarFile).then(
         abilties => promises.writeFile(outputAbilities, JSON.stringify(abilties))
     );
 }
+
+// Create Ability file if called directly
+createAbilities();

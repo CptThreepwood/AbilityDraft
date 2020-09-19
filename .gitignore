@@ -27,3 +27,4 @@ config/
 data/*.txt
 data/*.json
 data/*.pkl
+src/data/abilities.json
