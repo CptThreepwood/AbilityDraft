@@ -14,7 +14,7 @@ export interface MatchSummary {
     heroes: Hero[]
 }
 
-export function matchSummaryFromMatchResponse(data: APIResponse_MatchSummary_Match) {
+export function matchSummaryFromMatchResponse(data: APIResponse_MatchSummary_Match): MatchSummary {
     return {
         ...data,
         heroes: data.players.map(p => getHero(p.hero_id))
