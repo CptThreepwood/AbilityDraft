@@ -3,9 +3,10 @@ import { assert } from "console";
 
 
 export function getItem(id: number): Item {
+    // Is this what an undefined item ID means?
     if (id == 0 || id === undefined) {
         return {
-            id: 0, name: 'Empty', cost: 0,
+            id: id, name: 'Empty', cost: 0,
             secret_shop: false, side_shop: false,
             recipe: false, localized_name: 'Empty'
         }
