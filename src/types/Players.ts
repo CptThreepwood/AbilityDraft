@@ -41,12 +41,12 @@ export interface Player {
     // ID of the hero chosen
     hero: Hero,
     // Item Slot Contents
-    item_0: Item,
-    item_1: Item,
-    item_2: Item,
-    item_3: Item,
-    item_4: Item,
-    item_5: Item,
+    item_0: Item | undefined,
+    item_1: Item | undefined,
+    item_2: Item | undefined,
+    item_3: Item | undefined,
+    item_4: Item | undefined,
+    item_5: Item | undefined,
     // Backpack Contents
     backpack_0: Item | undefined,
     backpack_1: Item | undefined,
