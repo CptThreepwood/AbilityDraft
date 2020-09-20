@@ -1,7 +1,7 @@
 import { promises } from 'fs';
 import { matchFromJson } from './types/Matches';
 
-import { getMatches } from './getMatches';
+import { getMatches } from './APIRequests';
 
 async function testMatch() {
     const data = await promises.readFile(
