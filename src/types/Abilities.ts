@@ -14,11 +14,11 @@ export interface AbilityUpgrade {
 }
 
 export function getAbility(id: number): Ability {
-    const ability = abilities.filter(ability => ability.id == id);
-    assert(ability.length, `Ability ID ${id} not found`);
-    return ability[0];
+    const ability = abilities.find(ability => ability.id == id);
+    assert(ability, `Ability ID ${id} not found`);
+    return ability ? ability : {name: "Unknown", id: -1, englishName: "Unknown"};
 }
 
 export interface Ability {
-    name: string, id: number
+    name: string, id: number, englishName: string,
 }

@@ -1,4 +1,4 @@
-import { Ability } from "../types/Abilities";
+import { Ability } from "./types/Abilities";
 import { promises } from "fs";
 import { generate } from "pegjs";
 
@@ -46,7 +46,7 @@ async function parseDotaAbilityData(raw: string, grammarFile: string): Promise<A
     }
 }
 
-export async function createAbilities(
+async function createAbilities(
     dataFile: string = ABILTIES_DATA,
     grammarFile: string = GRAMMAR,
     outputAbilities: string = './src/data/abilities.json'
@@ -55,4 +55,8 @@ export async function createAbilities(
     return parseDotaAbilityData(rawAbilityString, grammarFile).then(
         abilties => promises.writeFile(outputAbilities, JSON.stringify(abilties))
     );
+}
+
+if (require.main === module) {
+    createAbilities();
 }
