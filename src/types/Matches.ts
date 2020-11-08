@@ -1,17 +1,47 @@
 import { Player, playerFromJson } from './Players';
 import { Hero, getHero } from './Heroes';
 
+import { APIResponse_MatchSummary, APIResponse_MatchSummary_Match } from './APIResponses';
+
+// ---------------------------------------------------------------------------------------------
+// MatchSummary
+
+export interface MatchSummary {
+    match_id: number,
+    match_seq_num: number,
+    start_time: number,
+    lobby_type: number,
+    heroes: Hero[]
+}
+
+export function matchSummaryFromMatchResponse(data: APIResponse_MatchSummary_Match): MatchSummary {
+    return {
+        ...data,
+        heroes: data.players.map(p => getHero(p.hero_id))
+    }
+}
+
+export function matchSummariesFromResponse(data: APIResponse_MatchSummary) {
+    return {
+        ...data.result,
+        matches: data.result.matches.map(matchSummaryFromMatchResponse)
+    }
+}
+
 export function matchFromJson(json: any): Match {
     return {
         ...json,
-        players: json.players.map(playerFromJson),
+        players: json.players?.map(playerFromJson) || [],
         tower_status_radiant: convertTowerStatus(json.tower_status_radiant),
         tower_status_dire: convertTowerStatus(json.tower_status_dire),
         barracks_status_radiant: convertRaxStatus(json.barracks_status_dire),
         barracks_status_dire: convertRaxStatus(json.barracks_status_dire),
-        picks_bans: json.picks_bans.map(pickFromJson),
+        picks_bans: json.picks_bans?.map(pickFromJson) || [],
     }
 }
+
+// ---------------------------------------------------------------------------------------------
+// Full Match Detail
 
 export interface Match {
     players: Player[],

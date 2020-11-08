@@ -23,13 +23,17 @@ var/
 *.egg
 node_modules
 
+# VSCode settings
+.vscode/
+
 # Serverless directories
 .serverless
 
-# Config
-config/
+# Secrets
+**.secret.**
 
 # Data Files
 data/*.txt
 data/*.json
 data/*.pkl
+src/data/abilities.json
