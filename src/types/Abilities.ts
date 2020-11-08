@@ -1,15 +1,16 @@
 import abilities from '../data/abilities.json';
-
-export function abilityUpgradeFromJson(json: any): AbilityUpgrade {
-    console.log(json);
-    console.log(getAbility(json.ability));
-    return {...json, ability: getAbility(json.ability)}
-}
+import {logger} from '../logger';
 
 export interface AbilityUpgrade {
     ability: Ability,
     time: number,
     level: number
+}
+
+export function abilityUpgradeFromJson(json: any): AbilityUpgrade {
+    console.log(json);
+    console.log(getAbility(json.ability));
+    return {...json, ability: getAbility(json.ability)}
 }
 
 export interface Ability {
@@ -18,6 +19,6 @@ export interface Ability {
 
 export function getAbility(id: number): Ability | undefined {
     const ability = abilities.find(ability => ability.id == id);
-    // logger.warn(ability, `Ability ID ${id} not found`);
+    if (ability === undefined) {logger.warn(`Ability ID ${id} not found`);}
     return ability;
 }

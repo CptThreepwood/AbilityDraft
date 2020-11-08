@@ -8,11 +8,13 @@
   "private": true,
   "dependencies": {
     "@types/pegjs": "^0.10.2",
+    "@types/pino": "^6.3.3",
     "assert": "^2.0.0",
     "cross-fetch": "^3.0.4",
     "date-fns": "^2.14.0",
     "got": "^11.7.0",
     "pegjs": "^0.10.0",
+    "pino": "^6.7.0",
     "ts-pegjs": "^0.2.7",
     "typescript": "^3.9.2"
   },
