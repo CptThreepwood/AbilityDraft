@@ -1,3 +1,9 @@
+# Editor Config
+.vscode
+
+# Build
+build
+
 # Distribution / packaging
 .Python
 env/
@@ -15,7 +21,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-**/node_modules/**
+node_modules
 
 # Serverless directories
 .serverless

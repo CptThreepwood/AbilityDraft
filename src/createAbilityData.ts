@@ -49,7 +49,7 @@ async function parseDotaAbilityData(raw: string, grammarFile: string): Promise<A
 async function createAbilities(
     dataFile: string = ABILTIES_DATA,
     grammarFile: string = GRAMMAR,
-    outputAbilities: string = './src/data/abilities.json'
+    outputAbilities: string = './build/data/abilities.json'
 ) {
     const rawAbilityString = await promises.readFile(dataFile, 'ascii');
     return parseDotaAbilityData(rawAbilityString, grammarFile).then(

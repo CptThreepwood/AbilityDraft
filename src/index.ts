@@ -1,3 +1,5 @@
+#!node
+
 import { promises } from 'fs';
 import { matchFromJson } from './types/Matches';
 
