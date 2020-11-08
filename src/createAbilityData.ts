@@ -5,9 +5,9 @@ import { generate } from "pegjs";
 // https://github.com/SteamDatabase/GameTracking-Dota2/game/dota/scripts/npc/npc_abilities.txt
 // https://raw.githubusercontent.com/SteamDatabase/GameTracking-Dota2/master/game/dota/pak01_dir/resource/localization/abilities_english.txt
 
-const ENGLISH_NAMES = "./src/data/abilityRaw/abilities_english.txt";
-const ABILTIES_DATA = './src/data/abilityRaw/npc_abilities.txt';
-const GRAMMAR = './src/data/abilityRaw/abilitiesGrammar.pegjs';
+const ENGLISH_NAMES = "./config/abilityRaw/abilities_english.txt";
+const ABILTIES_DATA = './config/abilityRaw/npc_abilities.txt';
+const GRAMMAR = './config/abilityRaw/abilitiesGrammar.pegjs';
 
 type NameLookup = {[id: string]: string}
 async function readEnglishAbilities(): Promise<NameLookup> {
