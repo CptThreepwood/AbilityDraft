@@ -1,4 +1,4 @@
-import { matchFromJson, MatchSummary, matchSummaryFromMatchResponse } from './types/Matches';
+import { MatchSummary, matchSummaryFromMatchResponse } from './types/Matches';
 import steam_config from './config/steam_key.secret.json';
 import got from 'got';
 
