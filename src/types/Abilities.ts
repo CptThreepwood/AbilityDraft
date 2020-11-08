@@ -20,5 +20,5 @@ export function getAbility(id: number): Ability {
 }
 
 export interface Ability {
-    name: string, id: number, englishName: string,
+    name: string, id: number | null, englishName: string,
 }
