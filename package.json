@@ -23,7 +23,7 @@
   },
   "scripts": {
     "createAbilities": "node ./build/createAbilityData.js",
-    "build": "./node_modules/typescript/bin/tsc --build tsconfig.json && yarn createAbilities && chmod +x build/index.js",
+    "build": "./node_modules/typescript/bin/tsc --build tsconfig.json && yarn createAbilities && chmod +x build/test.js",
     "test": "yarn build && node ./build/test.js"
   }
 }

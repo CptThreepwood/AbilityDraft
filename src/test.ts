@@ -1,4 +1,4 @@
-#!node
+#!/usr/bin/env node
 
 import { promises } from 'fs';
 import { matchFromJson } from './types/Matches';
