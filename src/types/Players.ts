@@ -1,6 +1,6 @@
-import { AbilityUpgrade, abilityUpgradeFromJson } from './Abilities';
-import { Hero, getHero } from './Heroes';
-import { Item, getItem } from './Items';
+import { AbilityUpgrade, I_AbilityUpgrade } from './Abilities';
+import { Hero } from './Heroes';
+import { Item } from './Items';
 
 export enum PlayerSlot {
     RADIANT1=0,
@@ -18,18 +18,18 @@ export enum PlayerSlot {
 export function playerFromJson(json: any): Player {
     return {
         ...json,
-        hero: getHero(json.hero_id),
-        item_0: getItem(json.item_0),
-        item_1: getItem(json.item_1),
-        item_2: getItem(json.item_2),
-        item_3: getItem(json.item_3),
-        item_4: getItem(json.item_4),
-        item_5: getItem(json.item_5),
-        backpack_0: json.backpack_0 ? getItem(json.backpack_0) : undefined,
-        backpack_1: json.backpack_1 ? getItem(json.backpack_1) : undefined,
-        backpack_2: json.backpack_2 ? getItem(json.backpack_2) : undefined,
-        item_neutral: json.item_neutral ? getItem(json.item_neutral) : undefined,
-        ability_upgrades: json.ability_upgrades?.map(abilityUpgradeFromJson) || []
+        hero: new Hero(json.hero_id),
+        item_0: new Item(json.item_0),
+        item_1: new Item(json.item_1),
+        item_2: new Item(json.item_2),
+        item_3: new Item(json.item_3),
+        item_4: new Item(json.item_4),
+        item_5: new Item(json.item_5),
+        backpack_0: json.backpack_0 ? new Item(json.backpack_0) : new Item(undefined),
+        backpack_1: json.backpack_1 ? new Item(json.backpack_1) : new Item(undefined),
+        backpack_2: json.backpack_2 ? new Item(json.backpack_2) : new Item(undefined),
+        item_neutral: json.item_neutral ? new Item(json.item_neutral) : new Item(undefined),
+        ability_upgrades: json.ability_upgrades?.map((u: I_AbilityUpgrade) => new AbilityUpgrade(u)) || []
     }
 }
 
@@ -41,17 +41,17 @@ export interface Player {
     // ID of the hero chosen
     hero: Hero,
     // Item Slot Contents
-    item_0: Item | undefined,
-    item_1: Item | undefined,
-    item_2: Item | undefined,
-    item_3: Item | undefined,
-    item_4: Item | undefined,
-    item_5: Item | undefined,
+    item_0: Item,
+    item_1: Item,
+    item_2: Item,
+    item_3: Item,
+    item_4: Item,
+    item_5: Item,
     // Backpack Contents
-    backpack_0: Item | undefined,
-    backpack_1: Item | undefined,
-    backpack_2: Item | undefined,
-    item_neutral: Item | undefined,
+    backpack_0: Item,
+    backpack_1: Item,
+    backpack_2: Item,
+    item_neutral: Item,
     // Player K/D/A
     kills: number,
     deaths: number,

@@ -1,24 +1,52 @@
-import abilities from '../data/abilities.json';
-import {logger} from '../logger';
+import { prop, Ref } from 'typegoose';
 
-export interface AbilityUpgrade {
-    ability: Ability,
+import abilities from '../data/abilities.json';
+import { logger } from '../logger';
+
+export interface I_AbilityUpgrade {
     time: number,
+    level: number,
+    ability: number,
+}
+
+export class AbilityUpgrade {
+    constructor(data: I_AbilityUpgrade) {
+        this.time = data.time;
+        this.level = data.level;
+        this.ability = new Ability(data.ability)
+    }
+
+    @prop({ ref: "Ability" })
+    ability: Ref<Ability>
+
+    @prop()
+    time: number
+
+    @prop()
     level: number
 }
 
-export function abilityUpgradeFromJson(json: any): AbilityUpgrade {
-    console.log(json);
-    console.log(getAbility(json.ability));
-    return {...json, ability: getAbility(json.ability)}
-}
+export class Ability {
+    constructor(id: number | null) {
+        const ability = abilities.find(ability => ability.id == id);
+        if (ability === undefined) {
+            logger.warn(`Ability ID ${id} not found`);
+            this.id = id;
+            this.name = 'Not Found';
+            this.englishName = 'Not Found';
+            return;
+        }
+        this.id = ability.id;
+        this.name = ability.name;
+        this.englishName = ability.englishName;
+    }
 
-export interface Ability {
-    name: string, id: number | null, englishName: string,
-}
+    @prop()
+    name: string
 
-export function getAbility(id: number): Ability | undefined {
-    const ability = abilities.find(ability => ability.id == id);
-    if (ability === undefined) {logger.warn(`Ability ID ${id} not found`);}
-    return ability;
+    @prop()
+    id: number | null
+
+    @prop()
+    englishName: string
 }

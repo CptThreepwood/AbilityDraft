@@ -1,35 +1,60 @@
+import { prop } from 'typegoose';
+
 import items from "../data/items.json";
-import { assert } from "console";
+import { logger } from '../logger';
 
-
-export function getItem(id: number): Item {
-    // Is this what an undefined item ID means?
-    if (id == 0 || id === undefined) {
-        return {
-            id: id, name: 'Empty', cost: 0,
-            secret_shop: false, side_shop: false,
-            recipe: false, localized_name: 'Empty'
+export class Item {
+    constructor(id?: number) {
+        if (id == 0 || id === undefined) {
+            this.id = 0;
+            this.name = 'Empty';
+            this.cost = 0;
+            this.secret_shop = false;
+            this.side_shop = false;
+            this.recipe = false;
+            this.localized_name = 'Empty';
+            return;
         }
+        const item = items.find(item => item.id == id);
+        // Is this what an undefined item ID means?
+        if (item === undefined) {
+            logger.warn(`Item ${id} not found`)
+            this.id = id;
+            this.name = 'Not Found',
+            this.cost = -1
+            this.secret_shop = false;
+            this.side_shop = false;
+            this.recipe = false;
+            this.localized_name = 'Not Found';
+            return;
+        }
+        this.id = item.id;
+        this.name = item.name;
+        this.cost = item.cost;
+        this.secret_shop = Boolean(item.secret_shop);
+        this.side_shop = Boolean(item.side_shop);
+        this.recipe = Boolean(item.recipe);
+        this.localized_name = item.localized_name;
     }
-    const item = items.filter(item => item.id == id);
-    assert(item.length, `No Item found matching ${id}`);
-    return {
-        id: item[0].id,
-        name: item[0].name,
-        cost: item[0].cost,
-        secret_shop: Boolean(item[0].secret_shop),
-        side_shop: Boolean(item[0].side_shop),
-        recipe: Boolean(item[0].recipe),
-        localized_name: item[0].localized_name,
-    };
-}
 
-export interface Item {
-    id: number,
-    name: string,
-    cost: number,
-    secret_shop: boolean,
-    side_shop: boolean,
-    recipe: boolean,
+    @prop()
+    id: number
+
+    @prop()
+    name: string
+
+    @prop()
+    cost: number
+
+    @prop()
+    secret_shop: boolean
+
+    @prop()
+    side_shop: boolean
+
+    @prop()
+    recipe: boolean
+
+    @prop()
     localized_name: string
 }

@@ -1,20 +1,25 @@
+import { prop } from 'typegoose';
 import heroes from '../data/heroes.json';
-import { assert } from 'console';
+import { logger } from '../logger';
 
-export function getHero(id: number): Hero {
-    if (id == 0 || id === undefined) {
-        return {
-            name: "empty_hero",
-            id: id, localized_name: "Empty Hero"
+export class Hero {
+    constructor(id?: number) {
+        const hero = heroes.find(hero => hero.id == id);
+        if (hero === undefined) {
+            logger.warn(`Hero ID ${id} not found`);
+            this.name = "empty_hero";
+            this.id = -1;
+            this.localized_name = "Empty Hero"
         }
+        return hero[0];
     }
-    const hero = heroes.filter(hero => hero.id == id);
-    assert(hero.length, `Hero ID ${id} not found`);
-    return hero[0];
-}
 
-export interface Hero {
-    name: string,
-    id: number,
+    @prop()
+    name: string
+
+    @prop()
+    id: number
+
+    @prop()
     localized_name: string
 }

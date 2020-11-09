@@ -1,31 +1,36 @@
-import { Player, playerFromJson } from './Players';
-import { Hero, getHero } from './Heroes';
+import { prop, Ref } from "typegoose"
 
-import { APIResponse_MatchSummary, APIResponse_MatchSummary_Match } from './APIResponses';
+import { Player, playerFromJson } from './Players';
+import { Hero } from './Heroes';
+
+import { APIResponse_MatchSummary_Match } from './APIResponses';
 
 // ---------------------------------------------------------------------------------------------
 // MatchSummary
 
-export interface MatchSummary {
-    match_id: number,
-    match_seq_num: number,
-    start_time: number,
-    lobby_type: number,
-    heroes: Hero[]
-}
-
-export function matchSummaryFromMatchResponse(data: APIResponse_MatchSummary_Match): MatchSummary {
-    return {
-        ...data,
-        heroes: data.players.map(p => getHero(p.hero_id))
+export class MatchSummary {
+    constructor(data: APIResponse_MatchSummary_Match) {
+        this.match_id = data.match_id;
+        this.match_seq_num = data.match_seq_num;
+        this.start_time = data.start_time;
+        this.lobby_type = data.lobby_type;
+        this.heroes = data.players.map(p => new Hero(p.hero_id))
     }
-}
 
-export function matchSummariesFromResponse(data: APIResponse_MatchSummary) {
-    return {
-        ...data.result,
-        matches: data.result.matches.map(matchSummaryFromMatchResponse)
-    }
+    @prop()
+    match_id: number
+
+    @prop()
+    match_seq_num: number
+
+    @prop()
+    start_time: number
+
+    @prop()
+    lobby_type: number
+
+    @prop({ ref: "Hero" })
+    heroes: Ref<Hero>[]
 }
 
 export function matchFromJson(json: any): Match {
@@ -93,7 +98,7 @@ export enum Team {
 
 export function pickFromJson(json: any): Pick {
     return {
-        ...json, hero: getHero(json.hero_id)
+        ...json, hero: new Hero(json.hero_id)
     }
 }
 
