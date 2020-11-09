@@ -1,0 +1,11 @@
+## Compiled Code
+build
+node_modules
+
+## Workspace Metadata
+.vscode
+.git
+.gitignore
+
+## Testing fixtures
+test
