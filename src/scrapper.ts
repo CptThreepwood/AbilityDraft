@@ -27,11 +27,12 @@ async function scrapeMatches(id: number | undefined) {
     const inserts = await Promise.all(matches.map(createMatchIfMissing)).then(
         (successes) => successes.reduce((acc, cur) => acc + (cur ? 1: 0), 0)
     );
-    if (inserts < matches.length) {
+    // Always at least one identical ID because we don't know the next seq num to request
+    if (inserts < (matches.length - 1)) {
         console.warn(`Inserted ${inserts} of ${matches.length} matches`);
     }
     await setTimeout(() => logger.info(`Sleeping for ${max_seq_id}`), 1000);
-    // await scrapeMatches(max_seq_id);
+    await scrapeMatches(max_seq_id);
 }
 
 // Create Ability file if called directly
