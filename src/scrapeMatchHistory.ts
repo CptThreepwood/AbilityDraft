@@ -1,4 +1,3 @@
-
 import mongoose from 'mongoose';
 import { MatchSummary, MatchSummaryModel } from './types/Matches';
 

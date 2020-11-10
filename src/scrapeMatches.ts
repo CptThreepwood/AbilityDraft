@@ -26,10 +26,14 @@ async function scrapeMatch(summary: MatchSummary): Promise<void> {
 // I'm not sure I trust the recursion in JS and this makes logging clearer
 async function scrapeMatchController() {
     const unscrappedMatches = await MatchSummaryModel.find({'detailScrapped': false})
+    for (let match of unscrappedMatches) {
+        logger.info(`Downloading match details for ${match._id}`);
+        await scrapeMatch(match);
+        await setTimeout(() => {}, 1000);
+    }
     await Promise.all(unscrappedMatches.map(scrapeMatch))
     logger.info('Done scrapping');
 }
-
 
 // Scrape missing matches if called directly
 if (require.main === module) {
