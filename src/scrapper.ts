@@ -1,0 +1,52 @@
+
+import mongoose from 'mongoose';
+import { MatchSummary, MatchSummaryModel } from './types/Matches';
+
+import { getMatchesSequence } from './APIRequests';
+import { logger } from './logger';
+import { match } from 'assert';
+
+async function createMatchIfMissing(match: MatchSummary): Promise<boolean> {
+    const exists = await MatchSummaryModel.exists({ _id: match._id} );
+    if (exists) { return false };
+    await MatchSummaryModel.create(match);
+    return true;
+}
+
+// I think matches are created faster than we can scrape them this way
+// I'm going to run it for a while and see
+async function scrapeMatches(id: number | undefined) {
+    logger.info(`Getting next batch from ${id}`)
+    const matches = await getMatchesSequence(id);
+    const max_seq_id = Math.max(...matches.map(m => m.match_seq_num));
+    if (max_seq_id == id) {
+        logger.info('Done scrapping');
+        return;
+    }
+
+    const inserts = await Promise.all(matches.map(createMatchIfMissing)).then(
+        (successes) => successes.reduce((acc, cur) => acc + (cur ? 1: 0), 0)
+    );
+    if (inserts < matches.length) {
+        console.warn(`Inserted ${inserts} of ${matches.length} matches`);
+    }
+    await setTimeout(() => logger.info(`Sleeping for ${max_seq_id}`), 1000);
+    // await scrapeMatches(max_seq_id);
+}
+
+// Create Ability file if called directly
+if (require.main === module) {
+    mongoose.connect(
+        process.env.MONGO_URI as string, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            dbName: "abilityDraft"
+        }
+    ).then(
+        async () => MatchSummaryModel.find().sort({match_seq_num:-1}).limit(1)
+    ).then(
+        (latestMatch) => scrapeMatches(latestMatch[0]?.match_seq_num)
+    ).then(
+        () => mongoose.connection.close()
+    );
+}
