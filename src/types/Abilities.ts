@@ -1,4 +1,4 @@
-import { prop, Ref } from 'typegoose';
+import { prop } from '@typegoose/typegoose';
 
 import abilities from '../data/abilities.json';
 import { logger } from '../logger';
@@ -16,8 +16,8 @@ export class AbilityUpgrade {
         this.ability = new Ability(data.ability)
     }
 
-    @prop({ ref: "Ability" })
-    ability: Ref<Ability>
+    @prop()
+    ability: Ability
 
     @prop()
     time: number

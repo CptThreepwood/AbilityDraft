@@ -1,4 +1,4 @@
-import { prop } from 'typegoose';
+import { prop } from '@typegoose/typegoose';
 import heroes from '../data/heroes.json';
 import { logger } from '../logger';
 
@@ -7,11 +7,14 @@ export class Hero {
         const hero = heroes.find(hero => hero.id == id);
         if (hero === undefined) {
             logger.warn(`Hero ID ${id} not found`);
-            this.name = "empty_hero";
-            this.id = -1;
-            this.localized_name = "Empty Hero"
+            this.name = "unknown";
+            this.id = id === undefined ? -1 : id;
+            this.localized_name = "Unknown";
+            return;
         }
-        return hero[0];
+        this.name = hero.name;
+        this.id = hero.id;
+        this.localized_name = hero.localized_name;
     }
 
     @prop()

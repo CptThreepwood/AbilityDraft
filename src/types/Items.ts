@@ -1,4 +1,4 @@
-import { prop } from 'typegoose';
+import { prop } from '@typegoose/typegoose';
 
 import items from "../data/items.json";
 import { logger } from '../logger';

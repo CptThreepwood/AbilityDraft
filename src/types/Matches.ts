@@ -1,4 +1,4 @@
-import { prop, Ref } from "typegoose"
+import { getModelForClass, prop } from "@typegoose/typegoose"
 
 import { Player, playerFromJson } from './Players';
 import { Hero } from './Heroes';
@@ -10,7 +10,7 @@ import { APIResponse_MatchSummary_Match } from './APIResponses';
 
 export class MatchSummary {
     constructor(data: APIResponse_MatchSummary_Match) {
-        this.match_id = data.match_id;
+        this._id = data.match_id;
         this.match_seq_num = data.match_seq_num;
         this.start_time = data.start_time;
         this.lobby_type = data.lobby_type;
@@ -18,7 +18,7 @@ export class MatchSummary {
     }
 
     @prop()
-    match_id: number
+    _id: number
 
     @prop()
     match_seq_num: number
@@ -29,9 +29,11 @@ export class MatchSummary {
     @prop()
     lobby_type: number
 
-    @prop({ ref: "Hero" })
-    heroes: Ref<Hero>[]
+    @prop()
+    heroes: Hero[]
 }
+
+export const MatchSummaryModel = getModelForClass(MatchSummary);
 
 export function matchFromJson(json: any): Match {
     return {
