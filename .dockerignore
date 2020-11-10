@@ -2,6 +2,9 @@
 build
 node_modules
 
+## Database Local Mountpoint
+db
+
 ## Workspace Metadata
 .vscode
 .git

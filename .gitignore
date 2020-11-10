@@ -33,7 +33,5 @@ node_modules
 **.secret.**
 
 # Data Files
-data/*.txt
-data/*.json
-data/*.pkl
+db
 src/data/abilities.json
