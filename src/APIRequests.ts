@@ -2,9 +2,10 @@ import { MatchSummary } from './types/Matches';
 import steam_config from './config/steam_key.secret.json';
 import got from 'got';
 
-import { promises } from 'fs';
 import { APIResponse_MatchSummary } from './types/APIResponses';
+import { logger } from './logger';
 
+const API_TIMEOUT = 3000
 const API_BASE = "https://api.steampowered.com/"
 const MATCH_HISTORY = "IDOTA2Match_570/GetMatchHistory/V001"
 const MATCH_SEQ_HISTORY = "IDOTA2Match_570/GetMatchHistoryBySequenceNum/V001"
@@ -19,7 +20,6 @@ export async function getMatches(): Promise<MatchSummary[]> {
     // Game Mode filtering doesn't seem to work (otherwise this method would be preferred)
     // matchesEndpoint.searchParams.append('game_mode', '18');
     const response = await got(matchesEndpoint.toString(), {responseType: "json"});
-    promises.writeFile('./test/rawResponse.json', JSON.stringify(response.body));
 
     return (response.body as APIResponse_MatchSummary).result.matches.map(m => new MatchSummary(m));
 }
@@ -35,7 +35,10 @@ export async function getMatchesSequence(from?: number): Promise<MatchSummary[]>
     matchesEndpoint.searchParams.append('matches_requested', '100');
     
     const response = await got(matchesEndpoint.toString(), {responseType: "json"});
-    promises.writeFile('./test/rawResponse.json', JSON.stringify(response.body));
+    if (response.statusCode != 200) {
+        await setTimeout(() => logger.info('Retrying request'), API_TIMEOUT);
+        return getMatchesSequence(from);
+    }
 
     return (response.body as APIResponse_MatchSummary).result.matches.map(m => new MatchSummary(m));
 }
