@@ -1,4 +1,5 @@
 import { AbilityUpgrade, I_AbilityUpgrade } from './Abilities';
+import { APIResponse_Match_Player } from './APIResponses';
 import { Hero } from './Heroes';
 import { Item } from './Items';
 
@@ -15,71 +16,88 @@ export enum PlayerSlot {
     DIRE5=132,
 }
 
-export function playerFromJson(json: any): Player {
-    return {
-        ...json,
-        hero: new Hero(json.hero_id),
-        item_0: new Item(json.item_0),
-        item_1: new Item(json.item_1),
-        item_2: new Item(json.item_2),
-        item_3: new Item(json.item_3),
-        item_4: new Item(json.item_4),
-        item_5: new Item(json.item_5),
-        backpack_0: json.backpack_0 ? new Item(json.backpack_0) : new Item(undefined),
-        backpack_1: json.backpack_1 ? new Item(json.backpack_1) : new Item(undefined),
-        backpack_2: json.backpack_2 ? new Item(json.backpack_2) : new Item(undefined),
-        item_neutral: json.item_neutral ? new Item(json.item_neutral) : new Item(undefined),
-        ability_upgrades: json.ability_upgrades?.map((u: I_AbilityUpgrade) => new AbilityUpgrade(u)) || []
-    }
-}
+export class Player {
+    constructor(player: APIResponse_Match_Player) {
+        this.hero = new Hero(player.hero_id);
+        this.item_0 = new Item(player.item_0);
+        this.item_1 = new Item(player.item_1);
+        this.item_2 = new Item(player.item_2);
+        this.item_3 = new Item(player.item_3);
+        this.item_4 = new Item(player.item_4);
+        this.item_5 = new Item(player.item_5);
+        this.backpack_0 = player.backpack_0 ? new Item(player.backpack_0) : new Item(undefined);
+        this.backpack_1 = player.backpack_1 ? new Item(player.backpack_1) : new Item(undefined);
+        this.backpack_2 = player.backpack_2 ? new Item(player.backpack_2) : new Item(undefined);
+        this.item_neutral = player.item_neutral ? new Item(player.item_neutral) : new Item(undefined);
+        this.ability_upgrades = player.ability_upgrades?.map((u: I_AbilityUpgrade) => new AbilityUpgrade(u)) || [];
 
-export interface Player {
+        this.account_id = player.account_id;
+        this.kills = player.kills;
+        this.deaths = player.deaths;
+        this.assists = player.assists;
+        this.player_slot = player.player_slot;
+        this.leaver_status = player.leaver_status;
+        this.last_hits = player.last_hits;
+        this.denies = player.denies;
+        this.gold_per_min = player.gold_per_min;
+        this.xp_per_min = player.xp_per_min;
+        this.level = player.level;
+        this.hero_damage = player.level;
+        this.tower_damage = player.level;
+        this.hero_healing = player.level;
+        this.gold = player.level;
+        this.gold_spent = player.level;
+        this.scaled_hero_damage = player.level;
+        this.scaled_tower_damage = player.level;
+        this.scaled_hero_healing = player.level;
+    }
+
     // Account ID to look up user info
-    account_id: number,
+    account_id: number | undefined
     // (1-5) (radiant || dire)
-    player_slot: PlayerSlot,
+    player_slot: PlayerSlot
     // ID of the hero chosen
-    hero: Hero,
+    hero: Hero
     // Item Slot Contents
-    item_0: Item,
-    item_1: Item,
-    item_2: Item,
-    item_3: Item,
-    item_4: Item,
-    item_5: Item,
+    item_0: Item
+    item_1: Item
+    item_2: Item
+    item_3: Item
+    item_4: Item
+    item_5: Item
     // Backpack Contents
-    backpack_0: Item,
-    backpack_1: Item,
-    backpack_2: Item,
-    item_neutral: Item,
+    backpack_0: Item
+    backpack_1: Item
+    backpack_2: Item
+    item_neutral: Item
     // Player K/D/A
-    kills: number,
-    deaths: number,
-    assists: number,
+    kills: number
+    deaths: number
+    assists: number
     // Whether and how the player left
-    leaver_status: LeaverStatus,
+    leaver_status: LeaverStatus | undefined
     // Last Hits and Deniews
-    last_hits:number,
-    denies: number,
+    last_hits:number
+    denies: number
     // GPM and XPM
-    gold_per_min: number,
-    xp_per_min: number,
+    gold_per_min: number
+    xp_per_min: number
     // Final Hero Level
-    level: number,
+    level: number
     // Total damage dealt to heroes
-    hero_damage: number,
+    hero_damage: number
     // Total damage dealt to towers
-    tower_damage: number,
+    tower_damage: number
     // Total healing done to heroes
-    hero_healing: number,
+    hero_healing: number
     // Net Worth
-    gold: number,
+    gold: number
     // Net Worth Spent
-    gold_spent: number,
+    gold_spent: number
     // Not sure how scaling is applied, perhaps it's after all modifiers?
-    scaled_hero_damage: number,
-    scaled_tower_damage: number,
-    scaled_hero_healing: number,
+    scaled_hero_damage: number
+    scaled_tower_damage: number
+    scaled_hero_healing: number
     // List of abilities upgraded
     ability_upgrades: AbilityUpgrade[]
 }

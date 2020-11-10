@@ -1,20 +1,25 @@
 import { getModelForClass, prop } from "@typegoose/typegoose"
 
-import { Player, playerFromJson } from './Players';
+import { Player } from './Players';
 import { Hero } from './Heroes';
 
-import { APIResponse_MatchSummary_Match } from './APIResponses';
+import { 
+    APIResponse_Match,
+    APIResponse_Match_PickBan,
+    APIResponse_MatchSummary_Match,
+    APIResponse_Match_Match,
+} from './APIResponses';
 
 // ---------------------------------------------------------------------------------------------
 // MatchSummary
 
 export class MatchSummary {
-    constructor(data: APIResponse_MatchSummary_Match) {
-        this._id = data.match_id;
-        this.match_seq_num = data.match_seq_num;
-        this.start_time = data.start_time;
-        this.lobby_type = data.lobby_type;
-        this.heroes = data.players.map(p => new Hero(p.hero_id))
+    constructor(matchSummary: APIResponse_MatchSummary_Match) {
+        this._id = matchSummary.match_id;
+        this.match_seq_num = matchSummary.match_seq_num;
+        this.start_time = matchSummary.start_time;
+        this.lobby_type = matchSummary.lobby_type;
+        this.heroes = matchSummary.players.map(p => new Hero(p.hero_id))
         this.detailScrapped = false;
     }
 
@@ -39,80 +44,147 @@ export class MatchSummary {
 
 export const MatchSummaryModel = getModelForClass(MatchSummary);
 
-export function matchFromJson(json: any): Match {
-    return {
-        ...json,
-        players: json.players?.map(playerFromJson) || [],
-        tower_status_radiant: convertTowerStatus(json.tower_status_radiant),
-        tower_status_dire: convertTowerStatus(json.tower_status_dire),
-        barracks_status_radiant: convertRaxStatus(json.barracks_status_dire),
-        barracks_status_dire: convertRaxStatus(json.barracks_status_dire),
-        picks_bans: json.picks_bans?.map(pickFromJson) || [],
-    }
-}
-
 // ---------------------------------------------------------------------------------------------
 // Full Match Detail
 
-export interface Match {
-    players: Player[],
-    radiant_win: boolean,
-    // Length of the match in seconds
-    duration: number,
-    pre_game_duration: number,
-    // Unix timestamp for the time at which the game started
-    start_time: number,
-    // Unique ID for this match
-    match_id: number,
-    // Unique incrementing ID for this match
-    match_seq_num: number,
-    // Final Tower Status
-    tower_status_radiant: TowerStatus,
-    tower_status_dire: TowerStatus,
-    // Final Barracks Status
-    barracks_status_radiant: RaxStatus,
-    barracks_status_dire: RaxStatus,
+export class Match {
+    constructor(match: APIResponse_Match_Match) {
+        this.players = match.players?.map(p => new Player(p)) || [],
+        this.tower_status_radiant = convertTowerStatus(match.tower_status_radiant),
+        this.tower_status_dire = convertTowerStatus(match.tower_status_dire),
+        this.barracks_status_radiant = convertRaxStatus(match.barracks_status_dire),
+        this.barracks_status_dire = convertRaxStatus(match.barracks_status_dire),
+        this.picks_bans = match.picks_bans?.map((p: any) => new Pick(p)) || [],
 
-    cluster: number,
+        // Boring property initialisation - There's probably a better pattern
+        this._id = match.match_id;
+        this.radiant_win = match.radiant_win;
+        this.duration = match.duration;
+        this.pre_game_duration = match.pre_game_duration;
+        this.start_time = match.start_time;
+        this.match_seq_num = match.match_seq_num;
+        this.cluster = match.cluster;
+        this.first_blood_time = match.first_blood_time;
+        this.lobby_type = match.lobby_type;
+        this.human_players = match.human_players;
+        this.leagueid = match.leagueid;
+        this.positive_votes = match.positive_votes;
+        this.negative_votes = match.negative_votes;
+        this.game_mode = match.game_mode;
+        this.flags = match.flags;
+        this.engine = match.engine;
+        this.radiant_score = match.radiant_score;
+        this.dire_score = match.dire_score;
+    }
+
+    @prop()
+    players: Player[]
+
+    @prop()
+    radiant_win: boolean
+
+    // Length of the match in seconds
+    @prop()
+    duration: number
+    @prop()
+    pre_game_duration: number
+
+    // Unix timestamp for the time at which the game started
+    @prop()
+    start_time: number
+
+    // Unique ID for this match
+    @prop()
+    _id: number
+
+    // Unique incrementing ID for this match
+    @prop()
+    match_seq_num: number
+
+    // Final Tower Status
+    @prop()
+    tower_status_radiant: TowerStatus
+    @prop()
+    tower_status_dire: TowerStatus
+
+    // Final Barracks Status
+    @prop()
+    barracks_status_radiant: RaxStatus
+    @prop()
+    barracks_status_dire: RaxStatus
+    @prop()
+    cluster: number
+
     // Time in seconds at which first blood occured
-    first_blood_time: number,
+    @prop()
+    first_blood_time: number
+
     // Whether the lobby is public/private/other
-    lobby_type: LobbyType,
+    @prop()
+    lobby_type: LobbyType
+
     // Number of human players
-    human_players: number,
+    @prop()
+    human_players: number
+
     // ID of league this game was played in. 0 if no league.
-    leagueid: number,
+    @prop()
+    leagueid: number
+
     // Community opinion of game
-    positive_votes: number,
-    negative_votes: number,
+    @prop()
+    positive_votes: number
+    @prop()
+    negative_votes: number
+
     // Type of dota game being played
-    game_mode: GameMode,
+    @prop()
+    game_mode: GameMode
+
     // Unknown what flags are
-    flags: number,
+    @prop()
+    flags: number
+
     // Source 1 vs Source 2
-    engine: Engine,
+    @prop()
+    engine: Engine
+
     // Radiant and Dire total kills
-    radiant_score: number,
-    dire_score: number,
+    @prop()
+    radiant_score: number
+    @prop()
+    dire_score: number
+
     // Ordered list of picks and bans
+    @prop()
     picks_bans: Pick[]
 }
+
+export const MatchModel = getModelForClass(Match);
 
 export enum Team {
     RADIANT=0, DIRE=1
 }
 
-export function pickFromJson(json: any): Pick {
-    return {
-        ...json, hero: new Hero(json.hero_id)
+export class Pick {
+    constructor(pickban: APIResponse_Match_PickBan) {
+        this.is_pick = pickban.is_pick;
+        this.team = pickban.team;
+        this.hero = new Hero(pickban.hero_id);
+        this.order = pickban.order;
     }
-}
 
-export interface Pick {
     // True if pick, false if ban
-    is_pick: boolean,
-    team: Team,
-    hero: Hero,
+    @prop()
+    is_pick: boolean
+
+    @prop()
+    team: Team
+
+    @prop()
+    hero: Hero
+
+    @prop()
     order: number
 }
 

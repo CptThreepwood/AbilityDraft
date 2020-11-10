@@ -4,7 +4,6 @@ import { MatchSummary, MatchSummaryModel } from './types/Matches';
 
 import { getMatchesSequence } from './APIRequests';
 import { logger } from './logger';
-import { match } from 'assert';
 
 async function createMatchIfMissing(match: MatchSummary): Promise<boolean> {
     const exists = await MatchSummaryModel.exists({ _id: match._id} );
@@ -42,7 +41,7 @@ async function scrapeMatchesController(start_id: number | undefined) {
     logger.info('Done scrapping');
 }
 
-// Create Ability file if called directly
+// Scrape full Dota2 match history by sequence number if called directly
 if (require.main === module) {
     mongoose.connect(
         process.env.MONGO_URI as string, {

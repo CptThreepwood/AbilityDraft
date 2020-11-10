@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { promises } from 'fs';
 import mongoose from 'mongoose';
-import { matchFromJson, MatchSummaryModel } from './types/Matches';
+import { Match, MatchSummaryModel } from './types/Matches';
 
 import { getMatches } from './APIRequests';
 
@@ -11,7 +11,7 @@ async function testMatch() {
     ).then(
         data => JSON.parse(data)
     );
-    const parsedMatch = matchFromJson(data);
+    const parsedMatch = new Match(data);
     console.log(parsedMatch);
     await promises.writeFile('./test/parsedMatch.json', JSON.stringify(parsedMatch));
 }
