@@ -3,9 +3,7 @@ import steam_config from './config/steam_key.secret.json';
 import got from 'got';
 
 import { APIResponse_Match, APIResponse_MatchSummary } from './types/APIResponses';
-import { logger } from './logger';
 
-const API_TIMEOUT = 3000
 const API_BASE = "https://api.steampowered.com/"
 const MATCH_DETAIL = "IDOTA2Match_570/GetMatchDetails/V001"
 const MATCH_HISTORY = "IDOTA2Match_570/GetMatchHistory/V001"
