@@ -6,4 +6,4 @@ COPY . .
 
 RUN yarn && yarn build
 
-ENTRYPOINT [node './build/serve.js']
+CMD ["node","./build/scrapper.js"]
