@@ -15,6 +15,7 @@ export class MatchSummary {
         this.start_time = data.start_time;
         this.lobby_type = data.lobby_type;
         this.heroes = data.players.map(p => new Hero(p.hero_id))
+        this.detailScrapped = false;
     }
 
     @prop()
@@ -31,6 +32,9 @@ export class MatchSummary {
 
     @prop()
     heroes: Hero[]
+
+    @prop()
+    detailScrapped: boolean
 }
 
 export const MatchSummaryModel = getModelForClass(MatchSummary);
