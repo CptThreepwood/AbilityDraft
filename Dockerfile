@@ -6,4 +6,4 @@ COPY . .
 
 RUN yarn && yarn build
 
-CMD ["node","./build/scrapper.js"]
+CMD ["node","./build/scrapeMatchHistory.js"]
