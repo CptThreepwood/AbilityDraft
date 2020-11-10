@@ -34,11 +34,7 @@ export async function getMatchesSequence(from?: number): Promise<MatchSummary[]>
     }
     matchesEndpoint.searchParams.append('matches_requested', '100');
     
-    const response = await got(matchesEndpoint.toString(), {responseType: "json"});
-    if (response.statusCode != 200) {
-        await setTimeout(() => logger.info('Retrying request'), API_TIMEOUT);
-        return getMatchesSequence(from);
-    }
+    const response = await got(matchesEndpoint.toString(), {responseType: "json", retry: { limit: 10 }});
 
     return (response.body as APIResponse_MatchSummary).result.matches.map(m => new MatchSummary(m));
 }
