@@ -1,4 +1,6 @@
-import { AbilityUpgrade, I_AbilityUpgrade } from './Abilities';
+import { prop } from '@typegoose/typegoose';
+
+import { Ability, AbilityUpgrade, I_AbilityUpgrade } from './Abilities';
 import { APIResponse_Match_Player } from './APIResponses';
 import { Hero } from './Heroes';
 import { Item } from './Items';
@@ -53,52 +55,99 @@ export class Player {
     }
 
     // Account ID to look up user info
+    @prop()
     account_id: number | undefined
+
     // (1-5) (radiant || dire)
+    @prop()
     player_slot: PlayerSlot
+
     // ID of the hero chosen
+    @prop()
     hero: Hero
+
     // Item Slot Contents
+    @prop()
     item_0: Item
+    @prop()
     item_1: Item
+    @prop()
     item_2: Item
+    @prop()
     item_3: Item
+    @prop()
     item_4: Item
+    @prop()
     item_5: Item
+
     // Backpack Contents
+    @prop()
     backpack_0: Item
+    @prop()
     backpack_1: Item
+    @prop()
     backpack_2: Item
+    @prop()
     item_neutral: Item
+
     // Player K/D/A
+    @prop()
     kills: number
+    @prop()
     deaths: number
+    @prop()
     assists: number
+
     // Whether and how the player left
+    @prop()
     leaver_status: LeaverStatus | undefined
+
     // Last Hits and Deniews
+    @prop()
     last_hits:number
+    @prop()
     denies: number
+
     // GPM and XPM
+    @prop()
     gold_per_min: number
+    @prop()
     xp_per_min: number
+
     // Final Hero Level
+    @prop()
     level: number
+
     // Total damage dealt to heroes
+    @prop()
     hero_damage: number
+
     // Total damage dealt to towers
+    @prop()
     tower_damage: number
+
     // Total healing done to heroes
+    @prop()
     hero_healing: number
+
     // Net Worth
+    @prop()
     gold: number
+
     // Net Worth Spent
+    @prop()
     gold_spent: number
+
     // Not sure how scaling is applied, perhaps it's after all modifiers?
+    @prop()
     scaled_hero_damage: number
+    @prop()
     scaled_tower_damage: number
+    @prop()
     scaled_hero_healing: number
+
     // List of abilities upgraded
+    @prop({type: [AbilityUpgrade]})
     ability_upgrades: AbilityUpgrade[]
 }
 
