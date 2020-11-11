@@ -3,6 +3,31 @@ import { prop } from '@typegoose/typegoose';
 import abilities from '../data/abilities.json';
 import { logger } from '../logger';
 
+export class Ability {
+    constructor(id?: number) {
+        const ability = abilities.find(ability => ability.id == id);
+        if (ability === undefined ) {
+            logger.warn(`Ability ID ${id} not found`);
+            this.id = id;
+            this.name = 'Not Found';
+            this.englishName = 'Not Found';
+            return;
+        }
+        this.id = ability.id;
+        this.name = ability.name;
+        this.englishName = ability.englishName;
+    }
+
+    @prop()
+    name: string
+
+    @prop()
+    id?: number | null
+
+    @prop()
+    englishName: string
+}
+
 export interface I_AbilityUpgrade {
     time: number,
     level: number,
@@ -24,29 +49,4 @@ export class AbilityUpgrade {
 
     @prop()
     level: number
-}
-
-export class Ability {
-    constructor(id: number | null) {
-        const ability = abilities.find(ability => ability.id == id);
-        if (ability === undefined) {
-            logger.warn(`Ability ID ${id} not found`);
-            this.id = id;
-            this.name = 'Not Found';
-            this.englishName = 'Not Found';
-            return;
-        }
-        this.id = ability.id;
-        this.name = ability.name;
-        this.englishName = ability.englishName;
-    }
-
-    @prop()
-    name: string
-
-    @prop()
-    id: number | null
-
-    @prop()
-    englishName: string
 }

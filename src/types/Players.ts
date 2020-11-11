@@ -18,6 +18,23 @@ export enum PlayerSlot {
     DIRE5=132,
 }
 
+export enum LeaverStatus {
+    // finished match, no abandon.
+    NONE=0,
+    // player DC, no abandon.
+    DISCONNECTED=1,
+    // player DC > 5min, abandoned.
+    DISCONNECTED_TOO_LONG=2,
+    // player DC, clicked leave, abandoned.
+    ABANDONED=3,
+    // player AFK, abandoned.
+    AFK=4,
+    // player never connected, no abandon.
+    NEVER_CONNECTED=5,
+    // player took too long to connect, no abandon.
+    NEVER_CONNECTED_TOO_LONG=6,
+}
+
 export class Player {
     constructor(player: APIResponse_Match_Player) {
         this.hero = new Hero(player.hero_id);
@@ -56,7 +73,7 @@ export class Player {
 
     // Account ID to look up user info
     @prop()
-    account_id: number | undefined
+    account_id?: number
 
     // (1-5) (radiant || dire)
     @prop()
@@ -99,8 +116,8 @@ export class Player {
     assists: number
 
     // Whether and how the player left
-    @prop()
-    leaver_status: LeaverStatus | undefined
+    @prop({enum: LeaverStatus})
+    leaver_status?: LeaverStatus
 
     // Last Hits and Deniews
     @prop()
@@ -149,21 +166,4 @@ export class Player {
     // List of abilities upgraded
     @prop({type: [AbilityUpgrade]})
     ability_upgrades: AbilityUpgrade[]
-}
-
-export enum LeaverStatus {
-    // finished match, no abandon.
-    NONE=0,
-    // player DC, no abandon.
-    DISCONNECTED=1,
-    // player DC > 5min, abandoned.
-    DISCONNECTED_TOO_LONG=2,
-    // player DC, clicked leave, abandoned.
-    ABANDONED=3,
-    // player AFK, abandoned.
-    AFK=4,
-    // player never connected, no abandon.
-    NEVER_CONNECTED=5,
-    // player took too long to connect, no abandon.
-    NEVER_CONNECTED_TOO_LONG=6,
 }
