@@ -49,10 +49,10 @@ export const MatchSummaryModel = getModelForClass(MatchSummary);
 export class Match {
     constructor(match: APIResponse_Match_Match) {
         this.players = match.players?.map(p => new Player(p)) || [],
-        this.tower_status_radiant = convertTowerStatus(match.tower_status_radiant),
-        this.tower_status_dire = convertTowerStatus(match.tower_status_dire),
-        this.barracks_status_radiant = convertRaxStatus(match.barracks_status_dire),
-        this.barracks_status_dire = convertRaxStatus(match.barracks_status_dire),
+        this.tower_status_radiant = new TowerStatus(match.tower_status_radiant),
+        this.tower_status_dire = new TowerStatus(match.tower_status_dire),
+        this.barracks_status_radiant = new RaxStatus(match.barracks_status_dire),
+        this.barracks_status_dire = new RaxStatus(match.barracks_status_dire),
         this.picks_bans = match.picks_bans?.map((p: any) => new Pick(p)) || [],
 
         // Boring property initialisation - There's probably a better pattern
@@ -200,51 +200,81 @@ export enum LobbyType {
     MID_1V1=8,
 }
 
-export function convertTowerStatus(status: number): TowerStatus {
-    const mask = {
-        Top1: 1, Top2: 2, Top3: 4,
-        Mid1: 8, Mid2: 16, Mid3: 32,
-        Bot1: 64, Bot2: 128, Bot3: 256,
-        Top4: 512, Bot4: 1024 
-    };
-    return {
-        MidTier1: Boolean(status & mask.Mid1),
-        MidTier2: Boolean(status & mask.Mid2),
-        MidTier3: Boolean(status & mask.Mid3),
-        TopTier1: Boolean(status & mask.Top1),
-        TopTier2: Boolean(status & mask.Top2),
-        TopTier3: Boolean(status & mask.Top3),
-        TopTier4: Boolean(status & mask.Top4),
-        BotTier1: Boolean(status & mask.Bot1),
-        BotTier2: Boolean(status & mask.Bot2),
-        BotTier3: Boolean(status & mask.Bot3),
-        BotTier4: Boolean(status & mask.Bot4),
-    };
-}
-
-export interface TowerStatus {
-    MidTier1: boolean, MidTier2: boolean, MidTier3: boolean,
-    TopTier1: boolean, TopTier2: boolean, TopTier3: boolean, TopTier4: boolean,
-    BotTier1: boolean, BotTier2: boolean, BotTier3: boolean, BotTier4: boolean,
-}
-
-export function convertRaxStatus(status: number): RaxStatus {
-    const mask = {
-        TopMelee: 1, TopRanged: 2,
-        MidMelee: 4, MidRanged: 8,
-        BotMelee: 16, BotRanged: 32
-    };
-    return {
-        TopMelee: Boolean(status & mask.TopMelee), TopRanged: Boolean(status & mask.TopRanged),
-        MidMelee: Boolean(status & mask.MidMelee), MidRanged: Boolean(status & mask.MidRanged),
-        BotMelee: Boolean(status & mask.BotMelee), BotRanged: Boolean(status & mask.BotRanged)
+export class TowerStatus {
+    constructor(status: number) {
+        const mask = {
+            Top1: 1, Top2: 2, Top3: 4,
+            Mid1: 8, Mid2: 16, Mid3: 32,
+            Bot1: 64, Bot2: 128, Bot3: 256,
+            Top4: 512, Bot4: 1024
+        };
+        this.MidTier1 = Boolean(status & mask.Mid1);
+        this.MidTier2 = Boolean(status & mask.Mid2);
+        this.MidTier3 = Boolean(status & mask.Mid3);
+        this.TopTier1 = Boolean(status & mask.Top1);
+        this.TopTier2 = Boolean(status & mask.Top2);
+        this.TopTier3 = Boolean(status & mask.Top3);
+        this.TopTier4 = Boolean(status & mask.Top4);
+        this.BotTier1 = Boolean(status & mask.Bot1);
+        this.BotTier2 = Boolean(status & mask.Bot2);
+        this.BotTier3 = Boolean(status & mask.Bot3);
+        this.BotTier4 = Boolean(status & mask.Bot4);
     }
+
+    @prop()
+    MidTier1: boolean
+    @prop()
+    MidTier2: boolean
+    @prop()
+    MidTier3: boolean
+
+    @prop()
+    TopTier1: boolean
+    @prop()
+    TopTier2: boolean
+    @prop()
+    TopTier3: boolean
+    @prop()
+    TopTier4: boolean
+
+    @prop()
+    BotTier1: boolean
+    @prop()
+    BotTier2: boolean
+    @prop()
+    BotTier3: boolean
+    @prop()
+    BotTier4: boolean
 }
 
-export interface RaxStatus {
-    TopMelee: boolean, TopRanged: boolean,
-    MidMelee: boolean, MidRanged: boolean,
-    BotMelee: boolean, BotRanged: boolean,
+export class RaxStatus {
+    constructor(status: number) {
+        const mask = {
+            TopMelee: 1, TopRanged: 2,
+            MidMelee: 4, MidRanged: 8,
+            BotMelee: 16, BotRanged: 32
+        };
+        this.TopMelee = Boolean(status & mask.TopMelee);
+        this.TopRanged = Boolean(status & mask.TopRanged);
+        this.MidMelee = Boolean(status & mask.MidMelee);
+        this.MidRanged = Boolean(status & mask.MidRanged);
+        this.BotMelee = Boolean(status & mask.BotMelee);
+        this.BotRanged = Boolean(status & mask.BotRanged);
+    }
+    @prop()
+    TopMelee: boolean
+    @prop()
+    TopRanged: boolean
+
+    @prop()
+    MidMelee: boolean
+    @prop()
+    MidRanged: boolean
+
+    @prop()
+    BotMelee: boolean
+    @prop()
+    BotRanged: boolean
 }
 
 export enum GameMode {
