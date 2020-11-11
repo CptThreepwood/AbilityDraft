@@ -2,7 +2,7 @@ import { getModelForClass, prop } from "@typegoose/typegoose"
 
 import { Player } from './Players';
 import { Hero } from './Heroes';
-import { TowerStatus, RaxStatus } from './Buidling';
+import { TowerStatus, RaxStatus } from './Buildings';
 
 import { 
     APIResponse_Match_PickBan,
