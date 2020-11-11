@@ -21,7 +21,7 @@ export class Ability {
     @prop()
     name: string
 
-    @prop()
+    @prop({type: Number})
     id?: number | null
 
     @prop()
