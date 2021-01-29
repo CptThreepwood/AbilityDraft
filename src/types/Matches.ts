@@ -1,4 +1,4 @@
-import { getModelForClass, prop } from "@typegoose/typegoose"
+import { getModelForClass, prop, index } from "@typegoose/typegoose"
 
 import { Player } from './Players';
 import { Hero } from './Heroes';
@@ -13,6 +13,7 @@ import {
 // ---------------------------------------------------------------------------------------------
 // MatchSummary
 
+@index({match_seq_num: -1})
 export class MatchSummary {
     constructor(matchSummary: APIResponse_MatchSummary_Match) {
         this._id = matchSummary.match_id;

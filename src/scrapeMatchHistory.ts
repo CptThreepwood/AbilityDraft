@@ -46,12 +46,18 @@ if (require.main === module) {
         process.env.MONGO_URI as string, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            dbName: "abilityDraft"
+            dbName: "abilityDraft",
+	     useCreateIndex: true,
         }
     ).then(
         async () => MatchSummaryModel.find().sort({match_seq_num:-1}).limit(1)
     ).then(
-        (latestMatch) => scrapeMatchesController(latestMatch[0]?.match_seq_num)
+	// Normal
+	(latestMatch) => scrapeMatchesController(latestMatch[0]?.match_seq_num)
+	// Resume All Time
+	//(latestMatch) => scrapeMatchesController(452074771)
+	// 20th April, 2020
+	//(latestMatch) => scrapeMatchesController(4500000000)
     ).then(
         () => mongoose.connection.close()
     );
